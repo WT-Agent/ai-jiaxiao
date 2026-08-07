@@ -2,10 +2,10 @@
   <section class="nomads-showcase-section">
     <div class="showcase-header">
       <div class="header-left">
-        <h2 class="showcase-title">驾考实战通关模板库 (Nomads Showcase)</h2>
-        <p class="showcase-subtitle">精选驾考高频难点与满分看点，点击“一键套用”快速获取备考指南</p>
+        <h2 class="showcase-title">实战案例与模板库 (Nomads Showcase)</h2>
+        <p class="showcase-subtitle">精选高频实战场景，点击“一键套用”快速生成高质量结果</p>
       </div>
-      <span class="showcase-badge">已收录 {{ showcaseItems.length }} 个驾考实战模板</span>
+      <span class="showcase-badge">已收录 {{ showcaseItems.length }} 个实战模板</span>
     </div>
 
     <div class="showcase-grid">
@@ -41,95 +41,119 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+const props = defineProps<{
+  appTitle?: string;
+  isImage?: boolean;
+}>();
+
+const emit = defineEmits<{
+  (e: 'apply-template', payload: { prompt: string; style?: string }): void;
+}>();
+
 export interface ShowcaseItem {
   id: string;
   tag: string;
   title: string;
   prompt: string;
-  drivingExamType?: string;
-  licenseType?: string;
-  drivingStage?: string;
+  style?: string;
   usageCount: string;
 }
 
-const emit = defineEmits<{
-  (e: 'apply-template', payload: {
-    prompt: string;
-    drivingExamType?: string;
-    licenseType?: string;
-    drivingStage?: string;
-  }): void;
-}>();
-
-const showcaseItems = computed<ShowcaseItem[]>(() => [
-  {
-    id: 'jiaxiao-1',
-    tag: '科目二点位',
-    title: '倒车入库死看点与出库打方向时机',
-    prompt: '针对C1手动挡场地训练期，详细拆解倒车入库左右倒库看后视镜下沿与控制线对齐、后轮压库角打满时机及微调技巧。',
-    drivingExamType: '科目二倒车入库与侧方停车口诀',
-    licenseType: 'C1手动挡',
-    drivingStage: '场地训练期',
-    usageCount: '45.2k'
-  },
-  {
-    id: 'jiaxiao-2',
-    tag: '科目三路考',
-    title: '科目三加减档换挡不低头与平稳离合配合',
-    prompt: '针对C1手动挡模拟考冲刺期学员，梳理科目三加减档1挡升4挡无缝切换技巧，防换挡低头与踩空。',
-    drivingExamType: '科目三路考靠边停车与变道细节',
-    licenseType: 'C1手动挡',
-    drivingStage: '模拟考冲刺期',
-    usageCount: '38.9k'
-  },
-  {
-    id: 'jiaxiao-3',
-    tag: '坡道起步',
-    title: '坡道定点停车防熄火防溜车黄金三秒',
-    prompt: '针对C1手动挡场地训练期，详解坡道定点停车与起步看雨刮点位、找离合半联动半抖动状态与手刹配合。',
-    drivingExamType: '科目二倒车入库与侧方停车口诀',
-    licenseType: 'C1手动挡',
-    drivingStage: '场地训练期',
-    usageCount: '41.5k'
-  },
-  {
-    id: 'jiaxiao-4',
-    tag: '理论速记',
-    title: '科一科四理论交警手势与扣分罚款口诀',
-    prompt: '针对零基础刚报名前学员，梳理科目一与科目四高频错题、交警手势区别、扣12分与罚款金额记忆秘诀。',
-    drivingExamType: '科目一与科目四理论错题速记',
-    licenseType: 'C2自动挡',
-    drivingStage: '零基础刚报名前',
-    usageCount: '52.8k'
-  },
-  {
-    id: 'jiaxiao-5',
-    tag: '侧方停车',
-    title: '侧方停车防压角与出库打转向灯红线警戒',
-    prompt: '针对C2自动挡场地训练期，拆解侧方停车入库观察右后视镜库角出现时机、倒车打满方向及出库打左转向灯防扣分红线。',
-    drivingExamType: '科目二倒车入库与侧方停车口诀',
-    licenseType: 'C2自动挡',
-    drivingStage: '场地训练期',
-    usageCount: '36.4k'
-  },
-  {
-    id: 'jiaxiao-6',
-    tag: '心理疏导',
-    title: '考前紧张手抖与面对安全员考官心态安抚',
-    prompt: '针对模拟考冲刺期学员，解决考前紧张腿抖、心跳加速、听不清语音指令等问题，提供腹式呼吸法与考试心态建设。',
-    drivingExamType: '驾考考前紧张心理心理安抚',
-    licenseType: 'C1手动挡',
-    drivingStage: '模拟考冲刺期',
-    usageCount: '29.7k'
+// 模拟实战案例数据库（支持根据文本/图像类及应用主题切换）
+const showcaseItems = computed<ShowcaseItem[]>(() => {
+  if (props.isImage) {
+    return [
+      {
+        id: 'img-1',
+        tag: '写真肖像',
+        title: '商务精英形象照',
+        prompt: '高端写字楼背景，身穿深蓝色西装，眼神自信专注，赛博朋克光影效果',
+        style: '<photography>',
+        usageCount: '18.5k'
+      },
+      {
+        id: 'img-2',
+        tag: '概念插画',
+        title: '未来科幻城市海报',
+        prompt: '霓虹灯光的赛博朋克立体城市，飞行汽车，高品质概念插画，8k分辨率',
+        style: '<illustration>',
+        usageCount: '24.1k'
+      },
+      {
+        id: 'img-3',
+        tag: '二次元动漫',
+        title: '日系国潮动漫角色',
+        prompt: '穿着现代汉服的国风少年，手持纸伞，水彩漫感，唯美光感与柔光滤镜',
+        style: '<anime>',
+        usageCount: '15.9k'
+      },
+      {
+        id: 'img-4',
+        tag: '水彩艺术',
+        title: '治愈系自然风景画',
+        prompt: '晨雾中的森林湖泊，阳光穿透树林，水彩渐变质感，温馨治愈风格',
+        style: '<watercolor>',
+        usageCount: '12.3k'
+      }
+    ];
+  } else {
+    return [
+      {
+        id: 'text-1',
+        tag: '职场总结',
+        title: '周报 OKR 成果提炼',
+        prompt: '本周完成了核心模块优化与线上异常排查，请帮我梳理为具备量化指标的 OKR 汇报文案',
+        style: '专业干练，结果导向',
+        usageCount: '32.8k'
+      },
+      {
+        id: 'text-2',
+        tag: '高情商沟通',
+        title: '拒绝不合理加班话术',
+        prompt: '领导在周末突然布置非紧急任务，如何高情商、委婉且有理有据地推迟到工作日处理？',
+        style: '高情商，委婉，有情调',
+        usageCount: '28.4k'
+      },
+      {
+        id: 'text-3',
+        tag: '短视频文案',
+        title: '知识干货吸睛开头',
+        prompt: '准备制作一条关于高效学习法的短视频，设计 3 个能在前 3 秒留住用户的爆款口播开头',
+        style: '专业干练，结果导向',
+        usageCount: '45.1k'
+      },
+      {
+        id: 'text-4',
+        tag: '商务公文',
+        title: '跨部门协同申请函',
+        prompt: '因项目上线需要研发部门配合联调，撰写一份正式、严谨且明确时间节点的协同申请书',
+        style: '专业干练，结果导向',
+        usageCount: '19.7k'
+      },
+      {
+        id: 'text-5',
+        tag: '小红书种草',
+        title: '实战干货笔记排版',
+        prompt: '分享 5 个提升日常工作效率的文字工具，语言亲切，搭配吸引人的标题与 Emoji 排版',
+        style: '高情商，委婉，有情调',
+        usageCount: '36.2k'
+      },
+      {
+        id: 'text-6',
+        tag: '学术润色',
+        title: '论文摘要与结论重构',
+        prompt: '将以下粗糙的研究结论重写为学术规范、逻辑严密且无语法语病的论文摘要总结',
+        style: '专业干练，结果导向',
+        usageCount: '22.0k'
+      }
+    ];
   }
-]);
+});
 
 function applyTemplate(item: ShowcaseItem) {
   emit('apply-template', {
     prompt: item.prompt,
-    drivingExamType: item.drivingExamType,
-    licenseType: item.licenseType,
-    drivingStage: item.drivingStage
+    style: item.style
   });
 }
 </script>
